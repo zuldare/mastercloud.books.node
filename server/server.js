@@ -5,7 +5,7 @@ const User = require('../models/User.js');
 const server = express();
 server.use(express.json());
 
-const booksRouter = require('../routers/booksRouter.js');
+const booksRouter = require('../routers/usersRouter.js');
 server.use(booksRouter);
 
 const mongodbURL = "mongodb://localhost:27017/booksDB";
@@ -22,7 +22,7 @@ async function main(){
         }
         server.listen(3000, () => {
             console.log('============== App listening on port 3000! ==============');
-            initDatabase()
+            //initDatabase()
         });
     });
 }
@@ -35,13 +35,13 @@ function initDatabase(){
     });
 
     User.create({
-        id: 1,
+        userId: 1,
         nick: 'Jaime',
         email: 'jaime@google.com'
     });
 
     User.create({
-        id: 2,
+        userId: 2,
         nick: 'JohnDoe',
         email: 'johnDoe@unknown.com'
     });
