@@ -22,7 +22,7 @@ async function main(){
         }
         server.listen(3000, () => {
             console.log('============== App listening on port 3000! ==============');
-            //initDatabase()
+           // initDatabase()
         });
     });
 }
@@ -35,13 +35,11 @@ function initDatabase(){
     });
 
     User.create({
-        userId: 1,
         nick: 'Jaime',
         email: 'jaime@google.com'
     });
 
     User.create({
-        userId: 2,
         nick: 'JohnDoe',
         email: 'johnDoe@unknown.com'
     });
