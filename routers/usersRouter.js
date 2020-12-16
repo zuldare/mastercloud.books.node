@@ -1,7 +1,8 @@
 const express = require('express');
 const User = require('../models/User.js');
-const userRouter = express.Router();
+const Comment = require('../models/Comment.js')
 
+const userRouter = express.Router();
 
 async function findUsers(){
     const users = await User.find().exec();
@@ -66,5 +67,52 @@ userRouter.route('/users/:userId')
             })
         }
     });
+
+userRouter.route('/users/:userId/comments')
+    //GET comments of an user
+    .get(async (req, res) =>{
+        let user = await User.findOne({_id: req.params.userId}).exec();
+        if (user != null){
+            let comment = await Comment.find({nick: user.nick}).exec();
+            if (comment != null){
+                res.status(200).jsonp({comments: comments.map(comment => {
+                        return {
+                            _id: comment._id,
+                            commentId: comment.commentId,
+                            commentary: comment.commentary,
+                            score: comment.score,
+                            nick: comment.nick,
+                            bookId: comment.bookId
+                        }
+                    })});
+            } else {
+                res.status(404).send("Comments not found");
+            }
+        } else {
+            res.status(404).send("User not found");
+        }
+        User.findOne({id: req.params.userId}, function (err, user) {
+
+            if (user) {
+                Comment.find({nick: user.nick}, function (err, comments) {
+                    if (err) {
+                    } else {
+                        res.status(200).jsonp({comments: comments.map(comment => {
+                                return {
+                                    id: comment.commentId,
+                                    text: comment.text,
+                                    score: comment.score,
+                                    bookId: comment.bookId
+                                }
+                            })});
+                    }
+                });
+                res.status(200).jsonp(comment);
+            } else {
+                res.status(404).send("User not found");
+            }
+        })
+    });
+
 
 module.exports = userRouter;

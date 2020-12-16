@@ -1,12 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const booksRouter = require('../routers/usersRouter.js');
+const userRouter = require('../routers/booksRouter.js')
+
 const User = require('../models/User.js');
+const Comment = require('../models/Comment.js');
+const Book = require('../models/Book.js');
+
+
 const server = express();
 server.use(express.json());
-
-const booksRouter = require('../routers/usersRouter.js');
 server.use(booksRouter);
+server.use(userRouter);
 
 const mongodbURL = "mongodb://localhost:27017/booksDB";
 
@@ -22,17 +28,28 @@ async function main(){
         }
         server.listen(3000, () => {
             console.log('============== App listening on port 3000! ==============');
-           // initDatabase()
+             initUsersCollection();
+             initBooksCollection();
         });
     });
 }
 
-function initDatabase(){
-    User.deleteMany({}, function(err) {
-        if (err) {
-            console.log(err)
-        }
+function initBooksCollection(){
+    Book.deleteMany({});
+
+    Book.create({
+        "bookId": 1,
+        "title": "Refactor",
+        "author": "Martin Fowler",
+        "summary": "Learn to refactor",
+        "publishHouse": "Addison",
+        "publishYear": 2003,
+        comments: []
     });
+}
+
+function initUsersCollection(){
+    User.deleteMany({});
 
     User.create({
         nick: 'Jaime',
